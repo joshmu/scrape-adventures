@@ -43,7 +43,8 @@ module.exports = scrape = async userConfig => {
   const page = await browser.newPage()
 
   // don't load images
-  if (!config.loadImages) {
+  /*
+  if (!heroku) {
     await page.setRequestInterception(true)
     page.on('request', request => {
       if (request.resourceType() === 'image') {
@@ -53,6 +54,7 @@ module.exports = scrape = async userConfig => {
       }
     })
   }
+  */
 
   await page.setViewport({ width: 1200, height: 1000 }) // macbook pro 13' full screen
 
