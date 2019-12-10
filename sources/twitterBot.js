@@ -1,4 +1,4 @@
-const heroku = process.env.GSHEET_CLIENT_EMAIL ? true : false
+const heroku = process.env.TWITTER_PASSWORD ? true : false
 const puppeteer = require('puppeteer')
 // const fs = require('fs')
 const url = 'https://www.twitter.com/login'
@@ -9,6 +9,10 @@ if (!heroku) {
   twitterCreds = require('../creds/twitterCreds.js')
 } else {
   console.log('need to load in env variables for twitter creds')
+  twitterCreds = {
+    username: process.env.TWITTER_USERNAME,
+    password: process.env.TWITTER_PASSWORD
+  }
 }
 
 const defaultConfig = {

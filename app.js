@@ -9,7 +9,7 @@ const dev = process.argv[2] === 'dev'
 if (dev) console.log('dev mode is on...')
 // detect heroku env
 let heroku = false
-if (process.env.GSHEET_CLIENT_EMAIL) {
+if (process.env.TWITTER_PASSWORD) {
   console.log('HEROKU ENVIRONMENT')
   heroku = true
 } else {
