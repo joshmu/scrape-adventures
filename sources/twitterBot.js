@@ -56,8 +56,8 @@ module.exports = scrape = async userConfig => {
 
   await page.setViewport({ width: 1200, height: 1000 }) // macbook pro 13' full screen
 
-  // await page.goto('https://twitter.com/login')
-  await page.goto('https://twitter.com/login?username_disabled=true')
+  await page.goto('https://twitter.com/login')
+  // await page.goto('https://twitter.com/login?username_disabled=true')
 
   // await page.goto(url, { waitUntil: heroku ? 'networkidle' : 'networkidle2' })
   console.log('URL:', page.url())
@@ -68,14 +68,9 @@ module.exports = scrape = async userConfig => {
     'input.js-username-field',
     page.url().includes('username=disabled')
       ? twitterCreds.email
-      : twitterCreds.username,
-    {
-      delay: 50
-    }
+      : twitterCreds.username
   )
-  await page.type('input.js-password-field', twitterCreds.password, {
-    delay: 50
-  })
+  await page.type('input.js-password-field', twitterCreds.password)
   await page.click('button.submit')
 
   /*
@@ -95,6 +90,7 @@ module.exports = scrape = async userConfig => {
   )
   */
   await page.waitForNavigation()
+  await sleep(3000)
   console.log('URL:', page.url())
 
   let db = {
