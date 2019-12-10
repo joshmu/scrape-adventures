@@ -11,7 +11,8 @@ if (!heroku) {
   console.log('need to load in env variables for twitter creds')
   twitterCreds = {
     username: process.env.TWITTER_USERNAME,
-    password: process.env.TWITTER_PASSWORD
+    password: process.env.TWITTER_PASSWORD,
+    email: process.env.TWITTER_EMAIL
   }
 }
 
@@ -55,16 +56,23 @@ module.exports = scrape = async userConfig => {
 
   await page.setViewport({ width: 1200, height: 1000 }) // macbook pro 13' full screen
 
-  await page.goto('https://twitter.com/login')
+  // await page.goto('https://twitter.com/login')
+  await page.goto('https://twitter.com/login?username_disabled=true')
+
   // await page.goto(url, { waitUntil: heroku ? 'networkidle' : 'networkidle2' })
-  console.log(`url is ${url}`)
-  console.log('applying settings...')
+  console.log('URL:', page.url())
 
   // Login
   await page.waitForSelector('input.js-username-field')
-  await page.type('input.js-username-field', twitterCreds.username, {
-    delay: 50
-  })
+  await page.type(
+    'input.js-username-field',
+    page.url().includes('username=disabled')
+      ? twitterCreds.email
+      : twitterCreds.username,
+    {
+      delay: 50
+    }
+  )
   await page.type('input.js-password-field', twitterCreds.password, {
     delay: 50
   })
@@ -87,7 +95,7 @@ module.exports = scrape = async userConfig => {
   )
   */
   await page.waitForNavigation()
-  console.log('New Page URL:', page.url())
+  console.log('URL:', page.url())
 
   let db = {
     tweets: 0,
@@ -99,7 +107,7 @@ module.exports = scrape = async userConfig => {
     await page.goto(config.urls[i])
     // await page.waitForNavigation()
     await sleep(3000)
-    console.log('New Page URL:', page.url())
+    console.log('URL:', page.url())
 
     // scroll the page down
     for (let i = 0; i < config.scrollAmount; i++) {
