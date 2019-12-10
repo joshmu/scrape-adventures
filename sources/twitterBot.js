@@ -25,7 +25,9 @@ const defaultConfig = {
   scrollAmount: 4,
   headless: heroku ? true : false,
   slowMo: 0,
-  id: 'twitter'
+  id: 'twitter',
+  loadImages: false,
+  sleepTime: 8000
 }
 
 module.exports = scrape = async userConfig => {
@@ -41,8 +43,7 @@ module.exports = scrape = async userConfig => {
   const page = await browser.newPage()
 
   // don't load images
-  /*
-  if (!heroku) {
+  if (!config.loadImages) {
     await page.setRequestInterception(true)
     page.on('request', request => {
       if (request.resourceType() === 'image') {
@@ -52,7 +53,6 @@ module.exports = scrape = async userConfig => {
       }
     })
   }
-  */
 
   await page.setViewport({ width: 1200, height: 1000 }) // macbook pro 13' full screen
 
@@ -90,7 +90,7 @@ module.exports = scrape = async userConfig => {
   )
   */
   // await page.waitForNavigation()
-  await sleep(3000)
+  await sleep(config.sleepTime)
   console.log('URL:', page.url())
 
   let db = {
@@ -102,7 +102,7 @@ module.exports = scrape = async userConfig => {
   for (let i = 0; i < config.urls.length; i++) {
     await page.goto(config.urls[i])
     // await page.waitForNavigation()
-    await sleep(3000)
+    await sleep(config.sleepTime)
     console.log('URL:', page.url())
 
     // scroll the page down
@@ -110,7 +110,7 @@ module.exports = scrape = async userConfig => {
       await page.evaluate(() => {
         window.scrollBy(0, window.innerHeight)
       })
-      await sleep(1500)
+      await sleep(config.sleepTime / 5)
     }
 
     let response = await page.evaluate(() => {
@@ -144,7 +144,7 @@ module.exports = scrape = async userConfig => {
     db.tweets += response.tweets
     db.liked += response.liked
     db.alreadyLiked += response.alreadyLiked
-    await sleep(2000)
+    await sleep(config.sleepTime / 4)
   }
 
   console.log('TOTAL')
