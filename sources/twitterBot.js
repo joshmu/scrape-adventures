@@ -62,8 +62,12 @@ module.exports = scrape = async userConfig => {
 
   // Login
   await page.waitForSelector('input.js-username-field')
-  await page.type('input.js-username-field', twitterCreds.username)
-  await page.type('input.js-password-field', twitterCreds.password)
+  await page.type('input.js-username-field', twitterCreds.username, {
+    delay: 50
+  })
+  await page.type('input.js-password-field', twitterCreds.password, {
+    delay: 50
+  })
   await page.click('button.submit')
 
   /*
