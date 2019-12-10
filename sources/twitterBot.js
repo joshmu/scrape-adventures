@@ -89,7 +89,7 @@ module.exports = scrape = async userConfig => {
     '.StaticLoggedOutHomePage-content > .StaticLoggedOutHomePage-cell > .StaticLoggedOutHomePage-login > .LoginForm > .EdgeButton'
   )
   */
-  await page.waitForNavigation()
+  // await page.waitForNavigation()
   await sleep(3000)
   console.log('URL:', page.url())
 
