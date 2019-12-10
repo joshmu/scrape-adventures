@@ -61,6 +61,12 @@ module.exports = scrape = async userConfig => {
   console.log('applying settings...')
 
   // Login
+  await page.waitForSelector('input.js-username-field')
+  await page.type('input.js-username-field', twitterCreds.username)
+  await page.type('input.js-password-field', twitterCreds.password)
+  await page.click('button.submit')
+
+  /*
   await page.waitForSelector(
     '.StaticLoggedOutHomePage-cell > .StaticLoggedOutHomePage-login > .LoginForm > .LoginForm-username > .text-input'
   )
@@ -75,6 +81,7 @@ module.exports = scrape = async userConfig => {
   await page.click(
     '.StaticLoggedOutHomePage-content > .StaticLoggedOutHomePage-cell > .StaticLoggedOutHomePage-login > .LoginForm > .EdgeButton'
   )
+  */
   await page.waitForNavigation()
   console.log('New Page URL:', page.url())
 
