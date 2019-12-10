@@ -55,7 +55,7 @@ module.exports = scrape = async userConfig => {
 
   await page.setViewport({ width: 1200, height: 1000 }) // macbook pro 13' full screen
 
-  await page.goto('https://twitter.com/')
+  await page.goto('https://twitter.com/login')
   // await page.goto(url, { waitUntil: heroku ? 'networkidle' : 'networkidle2' })
   console.log(`url is ${url}`)
   console.log('applying settings...')
