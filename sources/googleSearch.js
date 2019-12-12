@@ -1,35 +1,24 @@
-const heroku = process.env.TWITTER_PASSWORD ? true : false
-const headless = process.argv[2] === 'headless'
+const dev = process.argv.includes('dev')
+const headless = process.argv.includes('headless')
 const puppeteer = require('puppeteer')
 // const fs = require('fs')
-const url = 'https://www.twitter.com/login'
 const sleep = async t => new Promise(resolve => setTimeout(resolve, t))
 
-let twitterCreds
-if (!heroku) {
-  twitterCreds = require('../creds/twitterCreds.js')
-} else {
-  console.log('need to load in env variables for twitter creds')
-  twitterCreds = {
-    username: process.env.TWITTER_USERNAME,
-    password: process.env.TWITTER_PASSWORD,
-    email: process.env.TWITTER_EMAIL
-  }
-}
-
 const defaultConfig = {
-  search: ['vanity mirror', 'beauty mirror', 'beauty cosmetcs'],
-  searchUrl: search => {
-    return `https://twitter.com/search?q=${search.replace(
+  url: 'https://www.google.com/',
+  search: ['josh mu', 'australia dance grant', 'contemporary dance residency'],
+  numOfResults: 100,
+  searchUrl: (search, num) => {
+    return `https://www.google.com/search?tbs=qdr%3Ay&q=${search.replace(
       /\s/g,
-      '%20'
-    )}&src=typed_query`
-  },
+      '+'
+    )}&num=${num}`
+  }, // 'tbs=qdr%3Ay' is for past year search
   scrollAmount: 4,
-  headless: heroku || headless ? true : false,
+  headless: dev || headless ? true : false,
   slowMo: 0,
-  id: 'twitter',
-  loadImages: false,
+  id: 'google',
+  noImages: false,
   sleepTime: 3000,
   // proxy: '103.83.95.122:32896'
   proxy: false
@@ -38,7 +27,7 @@ const defaultConfig = {
 module.exports = scrape = async userConfig => {
   const config = { ...defaultConfig, ...userConfig }
 
-  console.log('socialising on twitter.com')
+  console.log(config.id.toUpperCase())
 
   const browser = await puppeteer.launch({
     headless: config.headless,
@@ -52,8 +41,7 @@ module.exports = scrape = async userConfig => {
   const page = await browser.newPage()
 
   // don't load images
-  /*
-  if (!heroku) {
+  if (!config.noImages) {
     await page.setRequestInterception(true)
     page.on('request', request => {
       if (request.resourceType() === 'image') {
@@ -63,15 +51,38 @@ module.exports = scrape = async userConfig => {
       }
     })
   }
-  */
 
   await page.setViewport({ width: 1200, height: 1000 }) // macbook pro 13' full screen
 
-  await page.goto('https://twitter.com/login')
-  // await page.goto('https://twitter.com/login?username_disabled=true')
+  await page.goto(config.searchUrl(config.search[0], config.numOfResults), {
+    waitUntil: 'networkidle2'
+  })
+  // await page.goto(url, { waitUntil: dev ? 'networkidle' : 'networkidle2' })
 
-  // await page.goto(url, { waitUntil: heroku ? 'networkidle' : 'networkidle2' })
   console.log('URL:', page.url())
+
+  let urls = await page.evaluate(() => {
+    return Array.from(document.querySelectorAll('div#search a'))
+      .filter(anchor => anchor.innerHTML.includes('h3'))
+      .map(anchor => {
+        return {
+          title: anchor.firstChild.innerText,
+          url: anchor.href
+        }
+      })
+  })
+
+  // todo: only last 2 years (or 1.5 years)
+  console.log('URLS', urls)
+
+  await sleep(60000)
+
+  await page.waitForSelector('input')
+  await page.type('input', 'josh mu')
+  await page.waitFor(1000)
+  await page.click('input[type="submit"]')
+  ;('https://www.google.com/search?q=josh+mu')
+  await sleep(60000)
 
   // Login
   await page.waitForSelector('input.js-username-field')
@@ -148,3 +159,4 @@ module.exports = scrape = async userConfig => {
   await browser.close()
   return db
 }
+scrape()

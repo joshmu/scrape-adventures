@@ -5,13 +5,43 @@
  * `INSTAGRAM_USER=myuser INSTAGRAM_PWD=mypassword node instagram.js`
  *
  */
+
+const heroku = process.env.INSTAGRAM_PASSWORD ? true : false
+let creds
+if (!heroku) {
+  creds = require('../creds/instagramCreds.js')
+} else {
+  console.log('need to load in env variables for creds')
+  creds = {
+    username: process.env.INSTAGRAM_USERNAME,
+    password: process.env.INSTAGRAM_PASSWORD,
+    email: process.env.INSTAGRAM_EMAIL
+  }
+}
 const puppeteer = require('puppeteer')
 const screenshot = 'instagram.png'
 ;(async () => {
   const browser = await puppeteer.launch({
     headless: false
   })
+
   const page = await browser.newPage()
+
+  // don't load images
+  /*
+  if (!heroku) {
+    await page.setRequestInterception(true)
+    page.on('request', request => {
+      if (request.resourceType() === 'image') {
+        request.abort()
+      } else {
+        request.continue()
+      }
+    })
+  }
+  */
+  await page.setViewport({ width: 1200, height: 1000 }) // macbook pro 13' full screen
+
   await page.goto(
     'https://www.instagram.com/accounts/login/?source=auth_switcher',
     {
@@ -22,13 +52,13 @@ const screenshot = 'instagram.png'
   //email
   await page.waitForSelector("[name='username']")
   // await page.click("[name='username']");
-  await page.type("[name='username']", process.env.INSTAGRAM_USER)
+  await page.type("[name='username']", creds.username)
 
   //password
   await page.keyboard.down('Tab')
   //uncomment the following if you want the passwor dto be visible
   // page.$eval("._2hvTZ.pexuQ.zyHYP[type='password']", (el) => el.setAttribute("type", "text"));
-  await page.keyboard.type(process.env.INSTAGRAM_PWD)
+  await page.keyboard.type(creds.password)
 
   //the selector of the "Login" button
   // await page.click("._0mzm-.sqdOP.L3NKy>.Igw0E.IwRSH.eGOV_._4EzTm");
