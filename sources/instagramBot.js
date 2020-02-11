@@ -115,6 +115,7 @@ module.exports = async () => {
     while (likes < likesLimit) {
         await page.keyboard.press("ArrowRight", {delay: 50})
         await sleep(random(2000, 4000))
+        await page.waitForSelector('span[aria-label="Like"]')
         if (Math.random() > 0.15) {
             try {
                 await page.click('span[aria-label="Like"]')

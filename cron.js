@@ -36,4 +36,4 @@ const job2 = new CronJob('0 */15 * * * *', async () => {
         fs.writeFileSync('./timeLog.json', JSON.stringify(timeLog))
     }
 })
-job2.start()
+// job2.start()

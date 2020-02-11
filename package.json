@@ -1,7 +1,7 @@
 {
-  "name": "SocialBot",
+  "name": "scraperAllSorts",
   "version": "1.0.0",
-  "description": "social bot avoiding apis",
+  "description": "social bot avoiding apis - script is now a frankenstein of different scrapers I have worked on (insta/twitter/crypto/grants)",
   "main": "web/server.js",
   "scripts": {
     "start": "node web/server.js"
