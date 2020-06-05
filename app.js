@@ -9,7 +9,7 @@ const dev = process.argv[2] === 'dev'
 if (dev) console.log('dev mode is on...')
 // detect heroku env
 let heroku = false
-if (process.env.TWITTER_PASSWORD) {
+if (process.env.NODE_ENV) {
   console.log('HEROKU ENVIRONMENT')
   heroku = true
 } else {
@@ -38,12 +38,12 @@ let config = {
     // when to send notification for am and pm
     am: +process.env.NOTIFICATION_AM || 8,
     pm: +process.env.NOTIFICATION_PM || 20,
-    enabled: false
+    enabled: false,
   },
   timestamp: {
     date: appStartTime.format('DD/MM/YY h:mm:ssa'),
-    unix: appStartTime.format('x')
-  }
+    unix: appStartTime.format('x'),
+  },
 }
 
 ////////////////////
@@ -71,7 +71,7 @@ let config = {
   console.log(`\nSocialising...`)
   let data = {
     date: config.timestamp.date,
-    timestamp: config.timestamp.unix
+    timestamp: config.timestamp.unix,
   }
 
   // SOURCE 1 - TWITTER.COM
@@ -106,9 +106,7 @@ let config = {
   // NOTIFY
   ////////////////////
   // send summary at a specific time
-  let currentHour = +moment()
-    .add(timeDiff, 'hours')
-    .format('H')
+  let currentHour = +moment().add(timeDiff, 'hours').format('H')
   console.log('current hour is', currentHour)
   // 9am on HEROKU = 5pm in current location > 8 hours plus difference
   if (
@@ -145,9 +143,9 @@ async function email(subject, body) {
         // to: 'joshmu.crypto@gmail.com',
         to: 'mu@joshmu.com',
         subject: subject,
-        text: body
+        text: body,
       },
-      function(err, reply) {
+      function (err, reply) {
         if (err) console.error(err)
         // console.log(err && err.stack)
         // console.dir(reply)
