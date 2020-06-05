@@ -1,7 +1,7 @@
 {
-  "name": "scraperAllSorts",
+  "name": "scrape-adventures",
   "version": "1.0.0",
-  "description": "social bot avoiding apis - script is now a frankenstein of different scrapers I have worked on (insta/twitter/crypto/grants)",
+  "description": "a collection of web scraping adventures I went on, scouring the internet for data gold",
   "main": "web/server.js",
   "scripts": {
     "start": "node web/server.js"
