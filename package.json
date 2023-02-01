@@ -13,7 +13,7 @@
     "cron": "^1.7.2",
     "google-spreadsheet": "^2.0.7",
     "moment": "^2.29.2",
-    "mongoose": "^5.8.1",
+    "mongoose": "^5.13.15",
     "puppeteer": "^12.0.0",
     "puppeteer-cluster": "^0.18.0",
     "request": "^2.88.0",
