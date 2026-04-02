@@ -12,7 +12,7 @@
     "cheerio": "^1.0.0-rc.12",
     "cron": "^1.7.2",
     "google-spreadsheet": "^3.3.0",
-    "moment": "^2.29.2",
+    "moment": "^2.30.1",
     "mongoose": "^5.13.20",
     "puppeteer": "^12.0.0",
     "puppeteer-cluster": "^0.18.0",
