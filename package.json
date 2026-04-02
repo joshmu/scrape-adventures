@@ -9,7 +9,7 @@
   "author": "Josh Mu",
   "license": "ISC",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
+    "cheerio": "^1.0.0-rc.12",
     "cron": "^1.7.2",
     "google-spreadsheet": "^3.3.0",
     "moment": "^2.29.2",
